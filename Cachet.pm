@@ -146,7 +146,7 @@ sub curlPost {
 
 	$curl->setopt(CURLOPT_HEADER,0);
 	$curl->setopt(CURLOPT_URL,$url);
-	$curl->setopt(CURLOPT_CUSTOMREQUEST,'PUT');
+	$curl->setopt(CURLOPT_POST,1);
 	$curl->setopt(CURLOPT_POSTFIELDS,$data);
 	
 	my @HTTPHeader = (); 
@@ -171,7 +171,7 @@ sub curlPost {
 }
 
 sub curlDelete {
-
+	die("Not implemented");
 }
 
 sub ping {
@@ -266,7 +266,25 @@ sub getIncidentById {
 }
 
 sub createIncident {
-	die("Not implemented\n");
+	my ($self,$name,$message,$status,$component_id,$notify) = @_;
+	if(!$name && !$status) {
+		die('cachet.pm: Missing status and name while creating incident');
+	}
+	my $url = $self->{'baseUrl'} . 'incidents';
+	my $requestData = "";
+	$requestData .= 'name='.$name . '&';
+	$requestData .= 'status='.$status . '&';
+	
+	if($message) {
+		$requestData .= 'message='.$message . '&';
+	}
+	if($component_id) {
+		$requestData .= 'component_id='.$component_id . '&';
+	}
+	if($notify) {
+		$requestData .= 'notify='.$notify;
+	}
+	return $self->curlPost($url,$requestData);	
 }
 
 sub updateIncident {
