@@ -8,7 +8,7 @@ use MIME::Base64;
 
 my @ISA = qw(Exporter);
 my @EXPORT = ();
-my @EXPORT_OK = ('isWorking');
+my @EXPORT_OK = (&setComponentStatusById &isWorking &getComponents &getComponentById &getMetricById &getIncidents &getIncidentById  &getMetrics);
 
 
 sub new {
@@ -135,6 +135,44 @@ sub curlPut {
 	}
 }
 
+
+sub curlPost {
+	my $self =shift;
+	my $url = shift;
+	my $data = shift;
+	my $curl = WWW::Curl::Easy->new;
+	my $responseBody; 
+
+	$curl->setopt(CURLOPT_HEADER,0);
+	$curl->setopt(CURLOPT_URL,$url);
+	$curl->setopt(CURLOPT_CUSTOMREQUEST,'PUT');
+	$curl->setopt(CURLOPT_POSTFIELDS,$data);
+	
+	my @HTTPHeader = (); 
+	my $authorisationHeader = 'Authorization: Basic ' . encode_base64($self->{'email'} . ':' . $self->{'password'});
+
+	if($self->{'apiToken'}) {
+		$authorisationHeader = 'X-Cachet-Token: ' . $self->{'apiToken'};
+	}
+		
+	push(@HTTPHeader,$authorisationHeader);
+	$curl->setopt(CURLOPT_WRITEDATA,\$responseBody);
+	$curl->setopt(CURLOPT_HTTPHEADER,\@HTTPHeader);
+	my $retcode = $curl->perform;
+	if($retcode == 0) {
+		my $decoded = decode_json($responseBody);
+		#TODO: Error handling for decode_json
+		return $decoded->{'data'};
+	} else {
+		return $retcode;
+	}
+
+}
+
+sub curlDelete {
+
+}
+
 sub ping {
 	my $self = shift;
 	$self->sanityCheck(0);
@@ -206,6 +244,15 @@ sub getComponentById {
 	return $self->getById('components',$id);
 }
 
+
+sub createComponent {
+	die("Not implemented\n");
+}
+
+sub updateComponent {
+	die("Not implemented\n");
+}
+
 sub getIncidents {
 	my $self =shift;
 	return $self->get('incidents');
@@ -216,6 +263,22 @@ sub getIncidentById {
 	my $id = shift;
 	return $self->getById('incidents',$id);
 }
+
+sub createIncident {
+	die("Not implemented\n");
+}
+
+sub updateIncident {
+	die("Not implemented\n");
+}
+
+sub deleteIncident {
+	die("Not implemented\n");
+}
+
+
+
+
 
 sub getMetrics {
 	my $self =shift;
@@ -228,5 +291,16 @@ sub getMetricById {
 	return $self->getById('metrics',$id);
 }
 
+sub createMetric {
+	die("Not implemented\n");
+}
+
+sub updateMetric {
+	die("Not implemented\n");
+}
+
+sub deleteMetric {
+	die("Not implemented\n");
+}
 
 1;
