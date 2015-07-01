@@ -8,7 +8,8 @@ use MIME::Base64;
 
 my @ISA = qw(Exporter);
 my @EXPORT = ();
-my @EXPORT_OK = (&setComponentStatusById &isWorking &getComponents &getComponentById &getMetricById &getIncidents &getIncidentById  &getMetrics);
+#my @EXPORT_OK = (&setComponentStatusById &isWorking &getComponents &getComponentById &getMetricById &getIncidents &getIncidentById  &getMetrics);
+my @EXPORT_OK = ();
 
 
 sub new {
