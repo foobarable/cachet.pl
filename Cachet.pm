@@ -266,9 +266,9 @@ sub getIncidentById {
 }
 
 sub createIncident {
-	my ($self,$name,$message,$status,$component_id,$notify) = @_;
+	my ($self,$name,$status,$message,$component_id,$notify) = @_;
 	if(!$name && !$status) {
-		die('cachet.pm: Missing status and name while creating incident');
+		die('cachet.pm: Missing status and/or name while creating incident');
 	}
 	my $url = $self->{'baseUrl'} . 'incidents';
 	my $requestData = "";
@@ -288,7 +288,25 @@ sub createIncident {
 }
 
 sub updateIncident {
-	die("Not implemented\n");
+	my ($self,$id,$name,$status,$message,$component_id,$notify) = @_;
+	if(!$id && !$name && !$status) {
+		die('cachet.pm: Missing id, status and/or name while updating incident');
+	}
+	my $url = $self->{'baseUrl'} . 'incidents/' . $id ;
+	my $requestData = "";
+	$requestData .= 'name='.$name . '&';
+	$requestData .= 'status='.$status . '&';
+	
+	if($message) {
+		$requestData .= 'message='.$message . '&';
+	}
+	if($component_id) {
+		$requestData .= 'component_id='.$component_id . '&';
+	}
+	if($notify) {
+		$requestData .= 'notify='.$notify;
+	}
+	return $self->curlPut($url,$requestData);	
 }
 
 sub deleteIncident {
