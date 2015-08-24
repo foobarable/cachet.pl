@@ -273,7 +273,37 @@ sub createComponent {
 }
 
 sub updateComponent {
-	die("Not implemented\n");
+	# Status IDs:
+	# 1 - Operational
+	# 2 - Performance Issues
+	# 3 - Partial Outage
+	# 4 - Major Outage
+
+	my ($self,$id,$name,$status,$link,$order,$groupID) = @_;
+	if(!$id) {
+		die('cachet.pm: Missing id while updating component');
+	}
+	my $url = $self->{'baseUrl'} . 'components/' . $id;
+	my $requestData = "";
+	$requestData .= 'id='.$id. '&';
+	
+	if($name) {
+		$requestData .= 'name='.$name. '&';
+	}
+	if($status) {
+		$requestData .= 'status='.$status . '&';
+	}
+	if($link) {
+		$requestData .= 'link='.$link . '&';
+	}
+	if($order) {
+		$requestData .= 'order='.$order;
+	}
+	if($groupID) {
+		$requestData .= 'group_id='.$groupID;
+	}
+
+	return $self->curlPut($url,$requestData);	
 }
 
 sub getIncidents {
