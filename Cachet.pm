@@ -95,9 +95,14 @@ sub curlGet {
 
 	my $retcode = $curl->perform;	
 	if($retcode == 0) {
-		my $decoded = decode_json($responseBody);
-		#TODO: Error handling for decode_json
-		return $decoded->{'data'};
+		my $httpcode = $curl->getinfo(CURLINFO_HTTP_CODE);
+		if($httpcode == 200) {
+			my $decoded = decode_json($responseBody);
+			return $decoded->{'data'};
+		}
+		else {
+			return $httpcode;
+		}
 	} else {
 		return $retcode;
 	}
@@ -128,9 +133,15 @@ sub curlPut {
 	$curl->setopt(CURLOPT_HTTPHEADER,\@HTTPHeader);
 	my $retcode = $curl->perform;
 	if($retcode == 0) {
-		my $decoded = decode_json($responseBody);
-		#TODO: Error handling for decode_json
-		return $decoded->{'data'};
+		my $httpcode = $curl->getinfo(CURLINFO_HTTP_CODE);
+		if($httpcode == 200) {
+			my $decoded = decode_json($responseBody);
+			#TODO: Error handling for decode_json
+			return $decoded->{'data'};
+		}
+		else {
+			return $httpcode;
+		}
 	} else {
 		return $retcode;
 	}
@@ -161,9 +172,15 @@ sub curlPost {
 	$curl->setopt(CURLOPT_HTTPHEADER,\@HTTPHeader);
 	my $retcode = $curl->perform;
 	if($retcode == 0) {
-		my $decoded = decode_json($responseBody);
-		#TODO: Error handling for decode_json
-		return $decoded->{'data'};
+		my $httpcode = $curl->getinfo(CURLINFO_HTTP_CODE);
+		if($httpcode == 200) {
+			my $decoded = decode_json($responseBody);
+			#TODO: Error handling for decode_json
+			return $decoded->{'data'};
+		}
+		else {
+			return $httpcode;
+		}
 	} else {
 		return $retcode;
 	}
