@@ -95,12 +95,10 @@ sub curlGet {
 	$curl->setopt(CURLOPT_WRITEDATA,\$responseBody);
 
 	my $retcode = $curl->perform;	
-	print("Returncode: $retcode\n");
 	if($retcode == 0) {
 		my $httpcode = $curl->getinfo(CURLINFO_HTTP_CODE);
 		if($httpcode == 200) {
 			my $decoded = decode_json($responseBody);
-			print($decoded);
 			return $decoded->{'data'};
 		}
 		else {
