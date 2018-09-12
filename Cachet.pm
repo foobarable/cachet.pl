@@ -91,13 +91,16 @@ sub curlGet {
 	
 	$curl->setopt(CURLOPT_HEADER,0);
 	$curl->setopt(CURLOPT_URL,$url);
+	$curl->setopt(CURLOPT_FOLLOWLOCATION,1);
 	$curl->setopt(CURLOPT_WRITEDATA,\$responseBody);
 
 	my $retcode = $curl->perform;	
+	print("Returncode: $retcode\n");
 	if($retcode == 0) {
 		my $httpcode = $curl->getinfo(CURLINFO_HTTP_CODE);
 		if($httpcode == 200) {
 			my $decoded = decode_json($responseBody);
+			print($decoded);
 			return $decoded->{'data'};
 		}
 		else {
@@ -118,6 +121,7 @@ sub curlPut {
 
 	$curl->setopt(CURLOPT_HEADER,0);
 	$curl->setopt(CURLOPT_URL,$url);
+	$curl->setopt(CURLOPT_FOLLOWLOCATION,1);
 	$curl->setopt(CURLOPT_CUSTOMREQUEST,'PUT');
 	$curl->setopt(CURLOPT_POSTFIELDS,$data);
 	
@@ -157,6 +161,7 @@ sub curlPost {
 
 	$curl->setopt(CURLOPT_HEADER,0);
 	$curl->setopt(CURLOPT_URL,$url);
+	$curl->setopt(CURLOPT_FOLLOWLOCATION,1);
 	$curl->setopt(CURLOPT_POST,1);
 	$curl->setopt(CURLOPT_POSTFIELDS,$data);
 	
@@ -252,8 +257,7 @@ sub setComponentStatusById {
 
 sub getComponents {
 	my $self =shift;
-	return $self->get('components');
-
+	return  $self->get('components');
 }
 
 sub getComponentById {
